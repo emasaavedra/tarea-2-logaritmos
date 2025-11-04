@@ -3,7 +3,7 @@ package structures;
 public class TrieFrecuencia extends Trie {
 
     public TrieFrecuencia() {
-        super();
+        new TrieFrecuencia();
     }
 
     public void update_priority(Nodo v){

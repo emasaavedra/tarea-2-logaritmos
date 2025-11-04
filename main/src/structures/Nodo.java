@@ -8,15 +8,15 @@ public class Nodo {
     Nodo parent;
 
     // Estructura que mapea caracteres del abecedario a Hijos
-    Map<Character, Nodo> next = new HashMap<Character, Nodo>();
+    public Map<Character, Nodo> next = new HashMap<Character, Nodo>();
 
-    long priority;
+    public long priority;
 
-    String str;
+    public String str;
 
-    Nodo best_terminal;
+    public Nodo best_terminal;
 
-    long best_priority;
+    public long best_priority;
 
     public Nodo() {
         this.parent = null;
