@@ -8,7 +8,7 @@ public class Nodo {
     Nodo parent;
 
     // Estructura que mapea caracteres del abecedario a Hijos
-    public Map<Character, Nodo> next = new HashMap<Character, Nodo>();
+    public Nodo[] next;
 
     public long priority;
 
@@ -21,14 +21,31 @@ public class Nodo {
     public Nodo() {
         this.parent = null;
 
-        for (char c = 'a'; c <= 'z'; c++) {
-            next.put(c, null);
-        }
-        next.put('$', null);
+        this.next = new Nodo[27];
         this.priority = 0;
         this.str = null;
         this.best_terminal = null;
         this.best_priority = -1;
     }
+
+    public static int indexOf(char c) {
+        if (c == '$') return 26;
+
+        // Normalizamos: minúscula y verificamos que sea una letra válida
+        if (c >= 'A' && c <= 'Z') c = Character.toLowerCase(c);
+
+        if (c >= 'a' && c <= 'z') {
+            return c - 'a';
+        }
+
+        // Si no pertenece al alfabeto, devolvemos -1 (carácter inválido)
+        return -1;
+    }
+
+
+    public static char charOf(int i) {
+        return i == 26 ? '$' : (char) ('a' + i);
+    }
+
 }
 

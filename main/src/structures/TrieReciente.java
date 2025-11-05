@@ -3,7 +3,7 @@ package structures;
 public class TrieReciente extends Trie{
     int timestamp = 0;
     public TrieReciente(){
-        TrieReciente trie = new TrieReciente();
+        super();
     }
 
     @Override

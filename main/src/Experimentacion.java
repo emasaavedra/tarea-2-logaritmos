@@ -42,7 +42,7 @@ public class Experimentacion {
         List<Integer> checkpoints = potenciasDeDos(words.size());
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(outputPath))) {
-            pw.println("palabras,nodos_normalizados");
+            pw.println("palabras;nodos_normalizados");
             int nextCheckpoint = checkpoints.remove(0);
 
             for (int i = 0; i < words.size(); i++) {
@@ -52,7 +52,7 @@ public class Experimentacion {
 
                 if (i + 1 == nextCheckpoint) {
                     double normalizado = (double) t.getNumeroNodos() / totalChars;
-                    pw.printf("%d,%.6f%n", i + 1, normalizado);
+                    pw.printf("%d;%.6f%n", i + 1, normalizado);
                     if (!checkpoints.isEmpty())
                         nextCheckpoint = checkpoints.remove(0);
                 }
@@ -68,7 +68,7 @@ public class Experimentacion {
         List<Integer> checkpoints = potenciasDeDos(words.size());
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(outputPath))) {
-            pw.println("palabras,tiempo_normalizado_ms_por_char");
+            pw.println("palabras;tiempo_normalizado_ms_por_char");
 
             int prev = 0;
             for (int cp : checkpoints) {
@@ -84,7 +84,7 @@ public class Experimentacion {
                 long fin = System.nanoTime();
                 double tiempoMs = (fin - inicio) / 1e6;
                 double tiempoPorChar = tiempoMs / charsGrupo;
-                pw.printf("%d,%.6f%n", cp, tiempoPorChar);
+                pw.printf("%d;%.6f%n", cp, tiempoPorChar);
 
                 prev = cp;
             }
@@ -106,17 +106,25 @@ public class Experimentacion {
 
         // Mostrar qué hijos existen
         StringBuilder hijos = new StringBuilder();
-        for (Map.Entry<Character, Nodo> e : n.next.entrySet()) {
-            if (e.getValue() != null) hijos.append(e.getKey()).append(' ');
+        for (int i = 0; i < 27; i++) {
+            Nodo child = n.next[i];
+            if (child != null) {
+                char c = Nodo.charOf(i);
+                hijos.append(c).append(' ');
+            }
         }
         pw.printf("  hijos: %s%n", hijos.length() > 0 ? hijos.toString().trim() : "(sin hijos)");
         pw.println();
 
-        // Llamada recursiva a los hijos no nulos
-        for (Map.Entry<Character, Nodo> e : n.next.entrySet()) {
-            if (e.getValue() != null)
-                printNodo(e.getValue(), path + e.getKey(), pw);
+// Llamada recursiva a los hijos no nulos
+        for (int i = 0; i < 27; i++) {
+            Nodo child = n.next[i];
+            if (child != null) {
+                char c = Nodo.charOf(i);
+                printNodo(child, path + c, pw);
+            }
         }
+
     }
 
     // 🔹 Guardar el árbol a archivo para depuración

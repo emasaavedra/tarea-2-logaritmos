@@ -1,63 +1,62 @@
 package structures;
 
-import java.util.Map;
-
 public class Trie {
     private Nodo root;
     private long numeroNodos = 0;
 
-    public  Trie(){
+    public Trie() {
         root = new Nodo();
     }
 
-    /** Función que inserta un String dado en el Trie.
-     *
-     * Inserta cada caracter en un nodo, si no existe, se crea.
-     *
-     * @param w String
+    /** Inserta un String dado en el Trie.
+     *  Inserta cada caracter en un nodo, si no existe, se crea.
      */
-    public void insert(String w){
+    public void insert(String w) {
         Nodo n = this.root;
+
         for (int i = 0; i < w.length(); i++) {
-            Character c = w.charAt(i);
-            Nodo nodo = n.next.get(c);
+            char c = w.charAt(i);
+            int idx = Nodo.indexOf(c);
+
+            if (idx == -1) continue;
+
+            Nodo nodo = n.next[idx];
             if (nodo == null) {
                 nodo = new Nodo();
                 nodo.parent = n;
-                n.next.put(c, nodo);
+                n.next[idx] = nodo;
                 this.numeroNodos++;
             }
             n = nodo;
         }
-        Nodo terminal = n.next.get('$');
+
+        // Nodo terminal (carácter especial $)
+        int endIdx = Nodo.indexOf('$');
+        Nodo terminal = n.next[endIdx];
         if (terminal == null) {
             terminal = new Nodo();
             terminal.parent = n;
-
-            n.next.put('$', terminal);
+            n.next[endIdx] = terminal;
             this.numeroNodos++;
         }
 
-        terminal.str = w;
-        terminal.best_terminal = terminal;
-        terminal.best_priority = terminal.priority;
-
+        terminal.str = w; // Guarda la palabra completa en el nodo terminal
     }
 
-    public Nodo descend(Nodo v, Character c){
-        return v.next.get(c);
+    /** Retorna el hijo al descender por carácter c. */
+    public Nodo descend(Nodo v, Character c) {
+        return v.next[Nodo.indexOf(c)];
     }
 
-    public Nodo autocomplete(Nodo v){
+    /** Retorna el mejor nodo terminal del subárbol. */
+    public Nodo autocomplete(Nodo v) {
         return v.best_terminal;
     }
 
-    public void update_priority(Nodo v){}
+    /** Actualiza la prioridad del nodo terminal (implementado en subclases). */
+    public void update_priority(Nodo v) {}
 
-    /** Propaga las actualizaciones de priority del hijo al padre, hasta la raíz.
-     *
-     * @param v Nodo
-     */
+    /** Propaga las actualizaciones de priority hacia la raíz. */
     static void propagate(Nodo v) {
         Nodo actual = v;
         while (actual.parent != null) {
@@ -65,7 +64,8 @@ public class Trie {
 
             if (actual.priority > padre.best_priority) {
                 padre.best_priority = actual.priority;
-                padre.best_terminal = actual.best_terminal != null ? actual.best_terminal : actual;
+                padre.best_terminal =
+                        (actual.best_terminal != null) ? actual.best_terminal : actual;
             } else {
                 break;
             }
@@ -73,6 +73,7 @@ public class Trie {
         }
     }
 
+    /** Imprime el contenido del Trie (para debugging). */
     public void printTrie() {
         System.out.println("=== Trie ===");
         printNodo(this.root, "");
@@ -81,19 +82,16 @@ public class Trie {
     private void printNodo(Nodo nodo, String prefix) {
         if (nodo == null) return;
 
-        // Si este nodo representa el carácter '$', es un nodo terminal
         if (nodo.str != null) {
             System.out.println(prefix + "Terminal → " + nodo.str +
                     " | priority=" + nodo.priority +
                     " | best=" + (nodo.best_terminal != null ? nodo.best_terminal.str : "null"));
         }
 
-        // Recorremos los hijos
-        for (Map.Entry<Character, Nodo> entry : nodo.next.entrySet()) {
-            Character c = entry.getKey();
-            Nodo child = entry.getValue();
-
+        for (int i = 0; i < 27; i++) {
+            Nodo child = nodo.next[i];
             if (child != null) {
+                char c = Nodo.charOf(i);
                 System.out.println(prefix + "─ " + c);
                 printNodo(child, prefix + "  ");
             }
