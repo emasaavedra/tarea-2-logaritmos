@@ -78,7 +78,7 @@ public class Trie {
         System.out.println("=== Trie ===");
         printNodo(this.root, "");
     }
-
+    /** Imprime el Trie según sus ramificaciones y el str del mejor terminal */
     private void printNodo(Nodo nodo, String prefix) {
         if (nodo == null) return;
 
@@ -97,11 +97,11 @@ public class Trie {
             }
         }
     }
-
+    // getter para los numeros de Nodos
     public long getNumeroNodos() {
         return numeroNodos;
     }
-
+    // getter de la raíz del Trie
     public Nodo getRoot() {
         return this.root;
     }

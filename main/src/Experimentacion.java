@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class Experimentacion {
 
-    // 🔹 Leer dataset desde archivo
+    // Leer dataset desde archivo
     public static List<String> leerDataset(String path) throws IOException {
         List<String> words = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
@@ -21,7 +21,7 @@ public class Experimentacion {
         return words;
     }
 
-    // 🔹 Generar lista de potencias de dos hasta N
+    // Generar lista de potencias de dos
     public static List<Integer> potenciasDeDos(int N) {
         List<Integer> potencias = new ArrayList<>();
         int i = 1;
@@ -34,7 +34,7 @@ public class Experimentacion {
         return potencias;
     }
 
-    // 🔹 Experimento de consumo de memoria
+    // Experimento de consumo de memoria
     public static void experimentoMemoria(List<String> words, String outputPath) throws IOException {
         Trie t = new Trie();
         int totalChars = 0;
@@ -62,7 +62,7 @@ public class Experimentacion {
         System.out.println("✅ Archivo " + outputPath + " generado correctamente (memoria).");
     }
 
-    // 🔹 Experimento de tiempo
+    // Experimento de tiempo
     public static void experimentoTiempo(List<String> words, String outputPath) throws IOException {
         Trie t = new Trie();
         List<Integer> checkpoints = potenciasDeDos(words.size());
@@ -127,7 +127,7 @@ public class Experimentacion {
 
     }
 
-    // 🔹 Guardar el árbol a archivo para depuración
+    // Guardar el árbol a archivo para debug
     public static void dumpTrie(Trie t, String outputPath) throws IOException {
         try (PrintWriter pw = new PrintWriter(new FileWriter(outputPath))) {
             pw.println("=== DUMP DEL TRIE ===");
@@ -136,9 +136,9 @@ public class Experimentacion {
         System.out.println("🪵 Trie guardado en " + outputPath);
     }
 
-    // 🔹 Programa principal
+    // Programa principal
     public static void main(String[] args) throws Exception {
-        String datasetPath = "datasets/words.txt"; // cambia la ruta si es necesario
+        String datasetPath = "datasets/words.txt";
         List<String> words = leerDataset(datasetPath);
         System.out.println("Cargando dataset con " + words.size() + " palabras...");
 
@@ -146,7 +146,6 @@ public class Experimentacion {
         experimentoMemoria(words, "memoria.csv");
         experimentoTiempo(words, "tiempo.csv");
 
-        // Debug: guardar el trie final en archivo
         Trie t = new Trie();
         for (String w : words) t.insert(w);
         dumpTrie(t, "trie_dump.txt");
